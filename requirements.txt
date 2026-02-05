@@ -1,0 +1,13 @@
+# Flask Application Dependencies
+Flask==3.0.0
+Flask-Login==0.6.3
+
+# Selenium & WebDriver
+selenium==4.16.0
+webdriver-manager==4.0.1
+
+# Testing Framework
+pytest==7.4.3
+pytest-html==4.1.1
+
+
