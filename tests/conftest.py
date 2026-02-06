@@ -11,10 +11,7 @@ from config import TestConfig
 
 @pytest.fixture(scope='session')
 def app():
-    """
-    Create and configure a test Flask application instance
-    Session-scoped: created once for entire test session
-    """
+ 
     app = create_app(TestConfig)
     
     # Establish application context

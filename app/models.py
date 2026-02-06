@@ -2,7 +2,7 @@
 Database Models
 Defines the data structure for the Pomodoro application
 """
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
@@ -35,7 +35,7 @@ class User(UserMixin, db.Model):
     
     def update_last_login(self):
         """Update last login timestamp"""
-        self.last_login = datetime.utcnow()
+        self.last_login = datetime.now(timezone.utc)
         db.session.commit()
     
     def __repr__(self):
@@ -64,7 +64,7 @@ class PomodoroSession(db.Model):
     def complete_session(self):
         """Mark session as completed"""
         self.completed = True
-        self.completed_at = datetime.utcnow()
+        self.completed_at = datetime.now(timezone.utc)
         db.session.commit()
     
     def __repr__(self):
@@ -95,3 +95,5 @@ class UserSettings(db.Model):
     
     def __repr__(self):
         return f'<UserSettings for User {self.user_id}>'
+    
+    
