@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Pomodoro Timer - Focus Time{% endblock %}
+
+{% block title %}Created by -Ivan Ritchel Orpiano{% {% endblock %}%}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-lg timer-card">
+            <div class="card-body text-center p-5">
+                
+                <!-- Session Type Indicator -->
+                <div class="session-type mb-4">
+                    <h2 class="session-label">
+                        <span id="session-label" data-testid="timer-status">Ready to focus</span>
+                    </h2>
+                    <div class="session-indicators">
+                        <span class="session-indicator active" data-testid="work-session" id="work-indicator">Work</span>
+                        <span class="session-indicator" data-testid="short-break" id="short-break-indicator">Short Break</span>
+                        <span class="session-indicator" data-testid="long-break" id="long-break-indicator">Long Break</span>
+                    </div>
+                </div>
+
+                <!-- Timer Display -->
+                <div class="timer-display mb-4">
+                    <h1 id="timer" data-testid="timer-display" class="display-1 fw-bold text-danger">25:00</h1>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress mb-4" style="height: 10px;">
+                    <div id="progress-bar" data-testid="progress-bar" 
+                         class="progress-bar bg-danger progress-bar-striped" 
+                         role="progressbar" 
+                         style="width: 0%" 
+                         aria-valuenow="0" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="timer-controls mb-4">
+                    <button id="start-btn" data-testid="start-button" class="btn btn-success btn-lg mx-2">
+                        <i class="bi bi-play-fill"></i> Start
+                    </button>
+                    <button id="pause-btn" data-testid="pause-button" class="btn btn-warning btn-lg mx-2" style="display: none;">
+                        <i class="bi bi-pause-fill"></i> Pause
+                    </button>
+                    <button id="reset-btn" data-testid="reset-button" class="btn btn-secondary btn-lg mx-2">
+                        <i class="bi bi-arrow-clockwise"></i> Reset
+                    </button>
+                </div>
+
+                <!-- Session Info -->
+                <div class="session-info">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h5>Sessions Today</h5>
+                            <p class="display-6" id="session-count" data-testid="session-count">0</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Total Time</h5>
+                            <p class="display-6" id="total-time">0m</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Current Cycle</h5>
+                            <p class="display-6" id="cycle-count">1/4</p>
+                        </div>
+                    </div>
+                </div>
+
+                {% if not current_user.is_authenticated %}
+                <div class="alert alert-info mt-4">
+                    <strong>Note:</strong> <a href="{{ url_for('main.login') }}">Login</a> to track your sessions and view statistics.
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="card mt-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">🍅 Pomodoro Technique Tips</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">✓ Work for 25 minutes without interruption</li>
+                    <li class="mb-2">✓ Take a 5-minute break after each session</li>
+                    <li class="mb-2">✓ After 4 sessions, take a longer 15-minute break</li>
+                    <li class="mb-2">✓ Focus on one task at a time</li>
+                    <li class="mb-2">✓ Eliminate all distractions during work time</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Audio notification (hidden) -->
+<audio id="notification-sound" preload="auto">
+    <source src="{{ url_for('static', filename='audio/notification.mp3') }}" type="audio/mpeg">
+</audio>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/pomodoro.js') }}"></script>
+{% endblock %}
