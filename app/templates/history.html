@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}History - Pomodoro Timer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>📋 Session History</h2>
+            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-danger">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if sessions.items %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Session Type</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Completed At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for session in sessions.items %}
+                            <tr>
+                                <td>{{ session.started_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'primary' if session.session_type == 'work' else 'success' }}">
+                                        {{ session.session_type.replace('_', ' ').title() }}
+                                    </span>
+                                </td>
+                                <td>{{ session.duration }} minutes</td>
+                                <td>
+                                    {% if session.completed %}
+                                        <span class="badge bg-success">✓ Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">○ Incomplete</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if session.completed_at %}
+                                        {{ session.completed_at.strftime('%H:%M:%S') }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if sessions.pages > 1 %}
+                <nav aria-label="Session history pagination">
+                    <ul class="pagination justify-content-center mt-4">
+                        <li class="page-item {{ 'disabled' if not sessions.has_prev else '' }}">
+                            <a class="page-link" href="{{ url_for('main.history', page=sessions.prev_num) if sessions.has_prev else '#' }}">
+                                Previous
+                            </a>
+                        </li>
+                        
+                        {% for page_num in sessions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                <li class="page-item {{ 'active' if page_num == sessions.page else '' }}">
+                                    <a class="page-link" href="{{ url_for('main.history', page=page_num) }}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <li class="page-item {{ 'disabled' if not sessions.has_next else '' }}">
+                            <a class="page-link" href="{{ url_for('main.history', page=sessions.next_num) if sessions.has_next else '#' }}">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+                
+                {% else %}
+                <div class="text-center py-5">
+                    <h4 class="text-muted">No session history yet</h4>
+                    <p class="text-muted">Complete your first Pomodoro session to see it here!</p>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-danger mt-3">Start Timer</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
