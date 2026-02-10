@@ -258,21 +258,21 @@ def complete_session():
 @login_required
 def get_stats():
     """Get user statistics via API"""
-    today = datetime.utcnow().date()
-    
+    today = datetime.now(timezone.utc).date()
+
     today_sessions = PomodoroSession.query.filter(
         PomodoroSession.user_id == current_user.id,
         PomodoroSession.session_type == 'work',
         PomodoroSession.completed == True,
         func.date(PomodoroSession.started_at) == today
     ).count()
-    
+
     total_sessions = PomodoroSession.query.filter(
         PomodoroSession.user_id == current_user.id,
         PomodoroSession.session_type == 'work',
         PomodoroSession.completed == True
     ).count()
-    
+
     return jsonify({
         'today_sessions': today_sessions,
         'total_sessions': total_sessions
