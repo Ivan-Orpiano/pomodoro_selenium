@@ -22,14 +22,6 @@ class BasePage:
     # Element interaction methods
     
     def find_element(self, locator, timeout=10):
-        """
-        Find element with explicit wait
-        Args:
-            locator: Tuple of (By.METHOD, "value")
-            timeout: Wait timeout in seconds
-        Returns:
-            WebElement
-        """
         wait = WebDriverWait(self.driver, timeout)
         return wait.until(EC.presence_of_element_located(locator))
     
